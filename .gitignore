@@ -1,3 +1,6 @@
 analyses/*
 results/*
 metadata/experiment/*
+code/private/*
+data/*
+.env
