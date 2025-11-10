@@ -3,9 +3,18 @@ source ../../.env
 base_in="${DIR}/data/raw_reads"
 base_out="${DIR}/data/trimmed_reads"
 
-# for d in "$base_in"/P32262_201; do # First run: test script and measure time
-for d in "$base_in"/P32262_*; do
-    sample=$(basename "$d")
+ # First run: test script and measure time
+# for d in "$base_in"/P32262_201; do
+#    sample=$(basename "$d")
+
+# All reads
+# for d in "$base_in"/P32262_*; do
+#    sample=$(basename "$d")
+
+# Specific set of samples defined in samples.txt
+for sample in $(cat samples.txt); do 
+    d="${base_in}/${sample}"
+
     out_sample="$base_out/$sample"
     mkdir -p $out_sample
     cores=8
