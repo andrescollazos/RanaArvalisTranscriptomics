@@ -4,7 +4,7 @@
 #SBATCH -J FastQC
 #SBATCH -e %x.er
 #SBATCH -t 5:00:00
-#SBATCH -n 2
+#SBATCH -n 8
 #SBATCH --mail-user andres-felipe.collazos-rozo.6881@student.uu.se
 #SBATCH --mail-type=ALL
 
