@@ -1,26 +1,24 @@
-
 source ../../.env
 
-out="$DIR/results/01_preprocessing/03_qc_trimmed_reads"
+fastqc_results="$DIR/results/01_preprocessing/03_qc_trimmed_reads"
+out="$fastqc_results/multiqc"
 mkdir -p $out
-cores=16
+cores=2
 
 (echo "#!/bin/bash
 #SBATCH -A uppmax2025-2-221
 #SBATCH -M rackham
-#SBATCH -J FastQC_trimmed_reads
+#SBATCH -J MultiQC
 #SBATCH -e \"$out/%x.%j.er\"
 #SBATCH -o \"$out/slurm-%x.%j.out\"
-#SBATCH -t 3:00:00
+#SBATCH -t 30:00
 #SBATCH -n $cores
 #SBATCH --mail-user andres-felipe.collazos-rozo.6881@student.uu.se
 #SBATCH --mail-type=ALL
 
 module load bioinfo-tools
-module load FastQC/0.11.9
+module load MultiQC/1.22.2
 
-reads=\"$DIR/data/trimmed_reads/P32262_*/*.fastq.gz\"
-
-fastqc \$reads -o $out -t $cores
+multiqc $fastqc_results --outdir $out
 exit 0") | sbatch
-echo "QC analysis dispatched successfully"
+echo "MultiQC dispatched successfully"
