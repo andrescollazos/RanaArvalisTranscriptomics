@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source ../../.env
+source ../../../.env
 
 # Output file
-output="$RESULTS/00_trimmomatic_summary.tsv"
+output="$RESULTS/01_preprocessing/02_trimming/00_trimmomatic_summary.tsv"
 echo -e "Sample_id\tInput_read_pairs\tBoth_surviving\tForward_only_surviving\tReverse_only_surviving\tDropped" > "$output"
 
 # Iterate over all trim_P32262_*.er files
