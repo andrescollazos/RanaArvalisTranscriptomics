@@ -1,4 +1,4 @@
-# Transcriptomic analysis of thermal tlasticity along a tatitudinal gradient in *Rana arvalis*
+# Transcriptomic analysis of thermal plasticity along a latitudinal gradient in *Rana arvalis*
 
 This project investigates the relative roles of phenotypic plasticity and genetic adaptation in the thermal performance of *Rana arvalis* across a latitudinal gradient. Using RNA-seq data from tadpoles raised under different temperature treatments, the workflow includes de novo transcriptome assembly, annotation, and differential expression analysis to explore the genomic basis of thermal adaptation.
 
