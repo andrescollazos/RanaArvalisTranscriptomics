@@ -14,16 +14,15 @@
 module load bioinfo-tools
 source ../../.env
 
+# Copy the reads to the scratch
 samples="$DIR/data/trinity/samples.txt"
-
 while IFS=$'\t' read -r condition sample_id left right || [[ -n "$condition" ]]; do
     cp "$DIR/data/trimmed_reads/$sample_id/$left" "$SNIC_TMP/$left"
     cp "$DIR/data/trimmed_reads/$sample_id/$right" "$SNIC_TMP/$right"
 done < "$samples"
-
 cp $samples $SNIC_TMP/samples.txt
-cd $SNIC_TMP
 
+cd $SNIC_TMP
 singularity exec --cleanenv	\
 	--env LANG=C	\
 	--env LC_ALL=C	\
@@ -37,7 +36,7 @@ singularity exec --cleanenv	\
 	--no_run_inchworm
 
 # copy output in current directory
-cp -r trinity_out/ $DIR/results/02_transcriptome_assembly
+cp -Pr trinity_out/ $DIR/results/02_transcriptome_assembly
 
 # TRINITY_SINGULARITY points to the path where Trinity v2.15.2 singularity image is located
 # Trinity v2.15.2 singularity image was fetched from https://data.broadinstitute.org/Trinity/TRINITY_SINGULARITY/
