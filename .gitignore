@@ -2,6 +2,6 @@ analyses/*
 results/*
 metadata/experiment/*
 code/private/*
-code/**/*.test.sh
+code/**/*.test.*
 data/*
 .env
