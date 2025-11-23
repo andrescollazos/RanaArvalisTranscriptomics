@@ -15,6 +15,7 @@ module load bioinfo-tools
 source ../../.env
 
 # Copy the reads to the scratch
+echo "Copying the samples..."
 samples="$DIR/data/trinity/samples.txt"
 while IFS=$'\t' read -r condition sample_id left right || [[ -n "$condition" ]]; do
 	cp "$DIR/data/trimmed_reads/$sample_id/$left" "$SNIC_TMP/$left"
@@ -22,10 +23,13 @@ while IFS=$'\t' read -r condition sample_id left right || [[ -n "$condition" ]];
 done < "$samples"
 cp $samples $SNIC_TMP/samples.txt
 
-# Copy the in silico normalization out
+# Copy the in chrysalis out
+echo "Copying the chrysalis out..."
 cp -rP "$DIR/results/02_transcriptome_assembly/trinity_out" $SNIC_TMP
 
 cd $SNIC_TMP
+# Set the correct path to the partition reads in the scratch
+sed -i "s|SCRATCH_PATH|$SNIC_TMP|g" trinity_out/recursive_trinity.cmds
 
 singularity exec --cleanenv \
 	--env LANG=C \
@@ -37,7 +41,7 @@ singularity exec --cleanenv \
 	--samples_file samples.txt \
 	--output trinity_out \
 	--CPU 20 \
-	--grid_exec \"$HPC_GRID_RUNNER/hpc_cmds_GridRunner.pl --grid_conf $SLURM_SUBMIT_DIR/SLURM.conf -c\" \
+	--grid_exec "$HPC_GRID_RUNNER/hpc_cmds_GridRunner.pl --grid_conf $SLURM_SUBMIT_DIR/SLURM.conf -c" \
 	--full_cleanup \
 
 tree -sh > "$DIR/results/02_transcriptome_assembly/final_files.txt"
@@ -46,5 +50,3 @@ cp -Pr trinity_out/ $DIR/results/02_transcriptome_assembly
 
 # TRINITY_SINGULARITY points to the path where Trinity v2.15.2 singularity image is located
 # Trinity v2.15.2 singularity image was fetched from https://data.broadinstitute.org/Trinity/TRINITY_SINGULARITY/
-
-

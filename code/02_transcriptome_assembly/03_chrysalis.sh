@@ -39,6 +39,12 @@ singularity exec --cleanenv \
 	--CPU 20 \
 	--no_distributed_trinity_exec
 
+# Fix absolute paths in the commands for the Butterfly step
+# Change internal path to Trinity to the actual path
+sed -i 's|/usr/local/bin/util/support_scripts/../../Trinity|singularity exec --cleanenv --env LANG=C --env LC_ALL=C '"$TRINITY_SINGULARITY"'/trinityrnaseq.v2.15.2.simg Trinity|g' trinity_out/recursive_trinity.cmds
+# Change path to the partition reads to the SCRATCH_PATH flag to be replaced in Butterfly
+sed -i "s|$SNIC_TMP|SCRATCH_PATH|g" trinity_out/recursive_trinity.cmds
+
 # Copy the output
 cp -Pr trinity_out/ $DIR/results/02_transcriptome_assembly
 

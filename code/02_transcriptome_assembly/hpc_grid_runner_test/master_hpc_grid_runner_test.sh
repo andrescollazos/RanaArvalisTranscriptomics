@@ -12,5 +12,5 @@
 
 source ../../../.env
 
-$HPC_GRID_RUNNER/hpc_cmds_GridRunner.pl -c ./test_commands_test.txt --grid_conf ./SLURM_test.conf
+$HPC_GRID_RUNNER/hpc_cmds_GridRunner.pl -c ./test_commands.txt --grid_conf ./SLURM_test.conf
 
