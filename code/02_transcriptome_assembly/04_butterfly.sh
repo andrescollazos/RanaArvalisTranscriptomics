@@ -31,8 +31,7 @@ cd $SNIC_TMP
 # Set the correct path to the partition reads in the scratch
 sed -i "s|SCRATCH_PATH|$SNIC_TMP|g" trinity_out/recursive_trinity.cmds
 
-singularity exec --cleanenv \
-	--env LANG=C \
+singularity exec --env LANG=C \
 	--env LC_ALL=C \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
 	Trinity --seqType fq \
@@ -46,6 +45,8 @@ singularity exec --cleanenv \
 
 tree -sh > "$DIR/results/02_transcriptome_assembly/final_files.txt"
 # Copy the output
+echo "Copying the output"
+cp trinity_out.* $DIR/results/02_transcriptome_assembly
 cp -Pr trinity_out/ $DIR/results/02_transcriptome_assembly
 
 # TRINITY_SINGULARITY points to the path where Trinity v2.15.2 singularity image is located
