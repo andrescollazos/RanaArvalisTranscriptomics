@@ -3,5 +3,6 @@ results/*
 metadata/experiment/*
 code/private/*
 code/**/*.test.*
+docs/manuals/*
 data/*
 .env
