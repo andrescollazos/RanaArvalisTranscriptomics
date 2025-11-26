@@ -50,3 +50,5 @@ awk -v max=10000 '
     !skip { print > out }
 
 ' Trinity.fasta
+
+echo "You must run 04_01_blast_transcripts_array.sh with --array=0-$(( $(ls chunks/*.tmp.fasta | wc -l) - 1 ))%20"
