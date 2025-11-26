@@ -12,7 +12,7 @@
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
 #SBATCH --mail-type=ALL
 
-# module load bioinfo-tools samtools/1.20
+module load bioinfo-tools samtools/1.20
 source ../../.env
 
 out="$DIR/results/03_evaluation/00_read_representation"
