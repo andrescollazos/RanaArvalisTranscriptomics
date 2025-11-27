@@ -2,12 +2,10 @@
 #SBATCH -A uppmax2025-2-221
 #SBATCH -M rackham
 #SBATCH -J Blast_Chunk
-#SBATCH -t 4:00:00
+#SBATCH -t 4:30:00
 #SBATCH -p node
-#SBATCH --array=0-48%25
+#SBATCH --array=0-43%20
 #SBATCH --cpus-per-task=20
-#SBATCH --error=%x.%j.er
-#SBATCH --output=%x.%j.out
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
 #SBATCH --mail-type=ALL
 

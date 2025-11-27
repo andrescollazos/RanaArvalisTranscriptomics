@@ -4,9 +4,9 @@
 #SBATCH -J Chunk_Transcripts
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
-#SBATCH -t 4:00:00
+#SBATCH -t 0:20:00
 #SBATCH -p core
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --mem=32G
 #SBATCH --error=%x.%j.er
 #SBATCH --output=%x.%j.out
