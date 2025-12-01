@@ -19,11 +19,11 @@ dir="$DIR/results/03_evaluation/02_count_full_length_transcripts"
 cd $dir
 
 echo "Extracting data from the swissprot DB"
-# blastdbcmd \
-#   -db swissprot \
-#   -dbtype prot \
-#   -entry all \
-#   -out $dir/swissprot.fasta
+blastdbcmd \
+  -db swissprot \
+  -dbtype prot \
+  -entry all \
+  -out $dir/swissprot.fasta
 echo "Done"
 
 # Examine the percent of the target being aligned to by the best matching Trinity transcript
