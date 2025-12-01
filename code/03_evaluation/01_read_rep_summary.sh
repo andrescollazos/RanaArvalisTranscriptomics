@@ -1,3 +1,4 @@
+source ../../.env
 dir="$DIR/results/03_evaluation/00_read_representation"
 cd $dir
 
