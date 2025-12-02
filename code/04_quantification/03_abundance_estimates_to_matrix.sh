@@ -1,10 +1,10 @@
 #!/bin/bash -l
 #SBATCH -A uppmax2025-2-221
 #SBATCH -M rackham
-#SBATCH -J AlignEstAbundance
+#SBATCH -J AbundanceToMatrix
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
-#SBATCH -t 10:00:00
+#SBATCH -t 00:20:00
 #SBATCH -p node
 #SBATCH --cpus-per-task=20
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
