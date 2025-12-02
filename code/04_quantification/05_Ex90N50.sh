@@ -4,7 +4,7 @@
 #SBATCH -J 05_Ex90N50
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
-#SBATCH -t 0:02:00
+#SBATCH -t 0:10:00
 #SBATCH -p core
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
@@ -16,15 +16,16 @@ source ../../.env
 out="$DIR/results/04_quantification"
 cd $out
 
-echo "Compute Ex90N50"
+echo "Compute Ex90N50 at the transcript level"
 singularity exec --cleanenv \
 	--env LC_ALL=C \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
 	/usr/local/bin/util/misc/contig_ExN50_statistic.pl \
         salmon.isoform.TMM.EXPR.matrix Trinity.fasta transcript | tee ExN50.transcript.stats
 
-echo "Plot ExN50 statistic"
+echo "Compute Ex90N50 at the gene level"
 singularity exec --cleanenv \
 	--env LC_ALL=C \
-	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg ls \
-    /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript ExN50.transcript.stats
+	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
+	/usr/local/bin/util/misc/contig_ExN50_statistic.pl \
+        salmon.isoform.TMM.EXPR.matrix Trinity.fasta gene | tee ExN50.gene.stats
