@@ -4,9 +4,9 @@
 #SBATCH -J CountExpGeneTranscripts
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
-#SBATCH -t 1:00:00
-#SBATCH -p node
-#SBATCH --cpus-per-task=20
+#SBATCH -t 0:05:00
+#SBATCH -p core
+#SBATCH --cpus-per-task=2
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
 #SBATCH --mail-type=ALL
 
