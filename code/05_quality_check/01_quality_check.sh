@@ -24,3 +24,22 @@ singularity exec --cleanenv \
 		--samples full_samples.txt \
 		--min_rowSums 10 \
 		--compare_replicates
+
+singularity exec --cleanenv \
+	--env LC_ALL=C \
+	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
+		--samples full_samples.txt \
+		--min_rowSums 10 \
+		--log2 --CPM \
+		--sample_cor_matrix
+
+singularity exec --cleanenv \
+	--env LC_ALL=C \
+	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
+		--samples full_samples.txt \
+		--min_rowSums 10 \
+		--log2 \
+		--CPM --center_rows \
+		--prin_comp 3 
