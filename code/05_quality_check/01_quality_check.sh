@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH -A uppmax2025-2-221
 #SBATCH -M rackham
-#SBATCH -J PtRQualityCheck
+#SBATCH -J PtRQualityCheckxTemp
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
 #SBATCH -t 4:00:00
@@ -13,33 +13,74 @@
 module load bioinfo-tools
 source ../../.env
 
-matrix="$DIR/data/quantification/salmon.gene.counts.matrix"
-out="$DIR/results/05_quality_check"
+gene_matrix="$DIR/data/quantification/salmon.gene.counts.matrix"
+transcript_matrix="$DIR/data/quantification/salmon.isoform.counts.matrix"
+out="$DIR/results/05_quality_check/temperature"
+samples="$out/full_samples.temperature.txt"
 cd $out
 
+#-----------------------------------------------------------------------------------
+echo "GENE LEVEL:"
+mkdir -p gene
+cd gene
+
+echo "Compare replicates"
 singularity exec --cleanenv \
 	--env LC_ALL=C \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
-	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
-		--samples full_samples.txt \
-		--min_rowSums 10 \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $gene_matrix \
+		--samples $samples \
+		--log2 --CPM --min_rowSums 10 \
 		--compare_replicates
 
+echo "Sample correlation matrix"
 singularity exec --cleanenv \
 	--env LC_ALL=C \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
-	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
-		--samples full_samples.txt \
-		--min_rowSums 10 \
-		--log2 --CPM \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $gene_matrix \
+		--samples $samples \
+		--log2 --CPM --min_rowSums 10 \
 		--sample_cor_matrix
 
+echo "Principal Component Analysis"
 singularity exec --cleanenv \
 	--env LC_ALL=C \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
-	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
-		--samples full_samples.txt \
-		--min_rowSums 10 \
-		--log2 \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $gene_matrix \
+		--samples $samples \
+		--log2 --CPM --min_rowSums 10 \
 		--CPM --center_rows \
-		--prin_comp 3 
+		--prin_comp 3
+
+#-----------------------------------------------------------------------------------
+echo "TRANSCRIPT LEVEL:"
+cd $out
+mkdir -p transcript
+cd transcript
+
+echo "Compare replicates"
+singularity exec --cleanenv \
+	--env LC_ALL=C \
+	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $transcript_matrix \
+		--samples $samples \
+		--log2 --CPM --min_rowSums 10 \
+		--compare_replicates
+
+echo "Sample correlation matrix"
+singularity exec --cleanenv \
+	--env LC_ALL=C \
+	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $transcript_matrix \
+		--samples $samples \
+		--log2 --CPM --min_rowSums 10 \
+		--sample_cor_matrix
+
+echo "Principal Component Analysis"
+singularity exec --cleanenv \
+	--env LC_ALL=C \
+	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
+	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $transcript_matrix \
+		--samples $samples \
+		--log2 --CPM --min_rowSums 10 \
+		--center_rows --prin_comp 3
