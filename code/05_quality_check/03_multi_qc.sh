@@ -6,7 +6,7 @@
 #SBATCH -o %x.%A_%a.out
 #SBATCH -t 8:00:00
 #SBATCH -p node
-#SBATCH --array=0-12
+#SBATCH --array=0-13
 #SBATCH --cpus-per-task=20
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
 #SBATCH --mail-type=ALL
@@ -18,6 +18,7 @@ matrix="$DIR/data/quantification/salmon.gene.counts.matrix"
 dir="$DIR/results/05_quality_check/multi_qc"
 analyses=(
     "swedish-only"
+	"swedish-popxtemp"
     "non-swedish"
     "north-south"
     "temp-15-all_pop"
