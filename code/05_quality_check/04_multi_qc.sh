@@ -44,7 +44,7 @@ singularity exec --cleanenv \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
 	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
 		--samples $samples \
-		--log2 --CPM \	
+		--log2 --CPM \
 		--min_rowSums $min_rowSums \
 		--top_genes $top_genes \
 		--top_variable_genes $top_variable_genes \
