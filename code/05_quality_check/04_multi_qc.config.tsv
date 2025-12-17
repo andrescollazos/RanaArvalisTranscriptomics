@@ -1,0 +1,17 @@
+analysis	samples	min_rowSums	top_genes	top_variable_genes	var_gene_method
+popxtemp_baseline	popxtemp	10	0	0 null
+popxtemp_min_rowSums_50	popxtemp	50	0	0 null
+popxtemp_top_genes_100	popxtemp	0	100	0 null
+popxtemp_top_genes_500	popxtemp	0	500	0 null
+popxtemp_top_variable_genes_100_anova	popxtemp	0	0	100 anova
+popxtemp_top_variable_genes_500_anova	popxtemp	0	0	500 anova
+popxtemp_top_variable_genes_100_coeffvar	popxtemp	0	0	100 coeffvar
+popxtemp_top_variable_genes_500_coeffvar	popxtemp	0	0	500 coeffvar
+temp_baseline	temperature	10	0	0 null
+temp_min_rowSums_50	temperature	50	0	0 null
+temp_top_genes_100	temperature	0	100	0 null
+temp_top_genes_500	temperature	0	500	0 null
+temp_top_variable_genes_100_anova	temperature	0	0	100 anova
+temp_top_variable_genes_500_anova	temperature	0	0	500 anova
+temp_top_variable_genes_100_coeffvar	temperature	0	0	100 coeffvar
+temp_top_variable_genes_500_coeffvar	temperature	0	0	500 coeffvar
