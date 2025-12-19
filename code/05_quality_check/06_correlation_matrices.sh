@@ -14,12 +14,13 @@
 module load bioinfo-tools
 source ../../.env
 
+matrix="$DIR/data/quantification/salmon.gene.counts.matrix"
 dir="$DIR/results/05_quality_check/multi_qc_251215"
 cd $dir
 CONFIG="04_multi_qc.config.tsv"
 read analysis samples_type min_rowSums top_genes top_variable_genes var_gene_method < <(sed -n "$((SLURM_ARRAY_TASK_ID+2))p" $CONFIG)
 
-samples_baltic="$dir/baltic.samples.txt"
+cp baltic.samples.txt $analysis
 cd $analysis
 
 echo "Sample correlation matrix"
@@ -27,7 +28,7 @@ singularity exec --cleanenv \
 	--env LC_ALL=C \
 	$TRINITY_SINGULARITY/trinityrnaseq.v2.15.2.simg \
 	/usr/local/bin/Analysis/DifferentialExpression/PtR --matrix $matrix \
-		--samples $samples_baltic \
+		--samples baltic.samples.txt \
 		--log2 --CPM \
 		--min_rowSums $min_rowSums \
 		--top_genes $top_genes \
