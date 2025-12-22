@@ -21,6 +21,6 @@ cd $out
 TD2.LongOrfs \
   -t Trinity.fasta \
   --gene-trans-map Trinity.fasta.gene_trans_map \
-  --threads ${SLURM_CPUS_PER_TASK}
+  --threads $SLURM_CPUS_PER_TASK
 
 conda deactivate
