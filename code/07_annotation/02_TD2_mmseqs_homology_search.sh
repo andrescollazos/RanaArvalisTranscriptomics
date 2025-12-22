@@ -4,7 +4,7 @@
 #SBATCH -J TD2_HomologySearch
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
-#SBATCH -t 16:00:00
+#SBATCH -t 00:20:00
 #SBATCH -p node
 #SBATCH --cpus-per-task=20
 #SBATCH --mail-user=andres-felipe.collazos-rozo.6881@student.uu.se
