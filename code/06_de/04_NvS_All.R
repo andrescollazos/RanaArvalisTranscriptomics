@@ -1,0 +1,77 @@
+args <- commandArgs(trailingOnly = TRUE)
+
+if (length(args) < 1) {
+  stop("Usage: Rscript diff_expression_swe.R <raw_count_matrix_file> <col_data_file>")
+}
+matrix_file <- args[1]
+col_data_file <- args[2]
+
+library("DESeq2")
+
+# Load data
+counts_data = read.table(matrix_file, header=T, row.names=1, com='');
+print("Loading raw count matrix: Done")
+col_data <- read.table(
+  col_data_file,
+  header = TRUE,
+  row.names = 1,
+  com = "",
+  stringsAsFactors = FALSE,
+  na.strings = ""
+)
+col_data$temperature <- factor(col_data$temperature)
+col_data$population  <- factor(col_data$population)
+col_data$family      <- factor(col_data$family)
+col_data$baltic_side <- factor(col_data$baltic_side)
+col_data$region <- factor(col_data$region)
+print("Loading col data: Done")
+
+# Reorder col_data rows to match counts_data column order
+col_data <- col_data[colnames(counts_data), ]
+col_ns_all <- col_data
+
+# Reassign region for Non-Swedish samples
+col_ns_all$region[col_ns_all$baltic_side == "Non_Swe"] <- "South"
+
+# Finland goes to North
+col_ns_all$region[col_ns_all$population == "C_Fin"] <- "North"
+
+# Ensure factor
+col_ns_all$region <- factor(col_ns_all$region)
+col_ns_all <- droplevels(col_ns_all)
+
+# Subset count matrix to the same samples
+cts <- counts_data[, rownames(col_ns_all)]
+# Round matrix
+cts <- round(cts)
+# Check matrix and coldata structure
+cat("Check matrix and coldata structure. Is it correct?", ncol(cts) == nrow(col_ns_all), "\n")
+
+# Construct DESeq2 dataset
+# Put the variable of interest at the end of the formula and make sure the control level is the first level.
+dds <- DESeqDataSetFromMatrix(
+  countData = cts,
+  colData = col_ns_all,
+  design = ~ population + family + temperature + region
+)
+
+# Pre filtering
+keep <- rowSums(counts(dds) >= 10) >= 2
+dds <- dds[keep,]
+
+# Set Factor Level
+dds$region <- relevel(dds$region, ref = "South")
+
+# Run DESeq
+print("Running DESeq")
+dds <- DESeq(dds)
+print("Obtaining results")
+res <- results(dds, name = "region_North_vs_South")
+print("Running DESeq: DONE")
+
+print("Calculating Shrinkage of effect size")
+resLFC <- lfcShrink(dds, coef = "region_North_vs_South", type = "apeglm")
+
+print("Saving Results")
+save(list=ls(all=TRUE), file="04_NvS_All.RData")
+print("Saving Results: DONE")

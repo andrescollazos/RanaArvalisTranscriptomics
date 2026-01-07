@@ -4,7 +4,7 @@
 #SBATCH -J TrinotateRun
 #SBATCH -e %x.%j.er
 #SBATCH -o %x.%j.out
-#SBATCH -t 16:00:00
+#SBATCH -t 33:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=20
 #SBATCH --mail-type=ALL

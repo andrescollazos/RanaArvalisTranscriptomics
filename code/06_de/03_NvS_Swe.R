@@ -30,21 +30,21 @@ print("Loading col data: Done")
 col_data <- col_data[colnames(counts_data), ]
 
 # Filter for Swedish-only samples
-col_swe <- col_data[col_data$baltic_side == "Swe", ]
-col_swe <- droplevels(col_swe)
+col_ns_swe <- col_data[col_data$baltic_side == "Swe", ]
+col_ns_swe <- droplevels(col_ns_swe)
 # Subset count matrix to the same samples
-cts <- counts_data[, rownames(col_swe)]
+cts <- counts_data[, rownames(col_ns_swe)]
 # Round matrix
 cts <- round(cts)
 # Check matrix and coldata structure
-cat("Check matrix and coldata structure. Is it correct?", ncol(cts) == nrow(col_swe), "\n")
+cat("Check matrix and coldata structure. Is it correct?", ncol(cts) == nrow(col_ns_swe), "\n")
 
 # Construct DESeq2 dataset
 # Put the variable of interest at the end of the formula and make sure the control level is the first level.
 dds <- DESeqDataSetFromMatrix(
   countData = cts,
-  colData = col_swe,
-  design = ~ population + family + temperature
+  colData = col_ns_swe,
+  design = ~ population + family + temperature + region
 )
 
 # Pre filtering
@@ -52,14 +52,18 @@ keep <- rowSums(counts(dds) >= 10) >= 2
 dds <- dds[keep,]
 
 # Set Factor Level
-dds$temperature <- relevel(dds$temperature, ref = "15")
+dds$region <- relevel(dds$region, ref = "South")
 
 # Run DESeq
 print("Running DESeq")
 dds <- DESeq(dds)
-res <- results(dds, name = "temperature_20_vs_15")
+print("Obtaining results")
+res <- results(dds, name = "region_North_vs_South")
 print("Running DESeq: DONE")
 
+print("Calculating Shrinkage of effect size")
+resLFC <- lfcShrink(dds, coef = "region_North_vs_South", type = "apeglm")
+
 print("Saving Results")
-save(list=ls(all=TRUE), file="diff_expression_swe.RData")
+save(list=ls(all=TRUE), file="03_NvS_Swe.RData")
 print("Saving Results: DONE")
