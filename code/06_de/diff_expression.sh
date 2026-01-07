@@ -4,7 +4,7 @@
 #SBATCH -J DESeq2_Array
 #SBATCH -e %x.%A_%a.er
 #SBATCH -o %x.%A_%a.out
-#SBATCH --array=0-3
+#SBATCH --array=0-5
 #SBATCH -t 4:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=20
@@ -16,6 +16,8 @@ source ../../.env
 matrix_file="$DIR/data/quantification/salmon.gene.counts.matrix"
 col_data_file="$DIR/data/diff_expression/coldata.tsv"
 analyses=(
+    "01_Temp_Swe"
+    "02_Temp_Non_Swe"
     "03_NvS_Swe"
     "04_NvS_All"
     "05_Region"
