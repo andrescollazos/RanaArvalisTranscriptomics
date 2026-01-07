@@ -65,3 +65,6 @@ resLFC <- lfcShrink(dds, coef = "temperature_20_vs_15", type = "apeglm")
 print("Saving Results")
 save(list=ls(all=TRUE), file="06_Temp_Region.RData")
 print("Saving Results: DONE")
+
+print("-----------------------------------------------------------------")
+warnings()

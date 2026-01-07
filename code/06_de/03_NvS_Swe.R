@@ -44,7 +44,7 @@ cat("Check matrix and coldata structure. Is it correct?", ncol(cts) == nrow(col_
 dds <- DESeqDataSetFromMatrix(
   countData = cts,
   colData = col_ns_swe,
-  design = ~ population + family + temperature + region
+  design = ~ family + temperature + region
 )
 
 # Pre filtering
@@ -67,3 +67,6 @@ resLFC <- lfcShrink(dds, coef = "region_North_vs_South", type = "apeglm")
 print("Saving Results")
 save(list=ls(all=TRUE), file="03_NvS_Swe.RData")
 print("Saving Results: DONE")
+
+print("-----------------------------------------------------------------")
+warnings()

@@ -42,7 +42,7 @@ cat("Check matrix and coldata structure. Is it correct?", ncol(cts) == nrow(col_
 dds <- DESeqDataSetFromMatrix(
   countData = cts,
   colData = col_all,
-  design = ~ temperature + population + family + region
+  design = ~ temperature + family + region
 )
 
 # Pre filtering
@@ -69,3 +69,6 @@ resLFC_East_North <- lfcShrink(dds, contrast = c("region", "East", "North"), typ
 print("Saving Results")
 save(list=ls(all=TRUE), file="05_Region.RData")
 print("Saving Results: DONE")
+
+print("-----------------------------------------------------------------")
+warnings()
