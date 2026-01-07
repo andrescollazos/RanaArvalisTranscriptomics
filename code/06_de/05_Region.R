@@ -55,16 +55,19 @@ dds$region <- relevel(dds$region, ref = "South")
 # Run DESeq
 print("Running DESeq")
 dds <- DESeq(dds)
+dds_EN <- dds
+dds_EN$region <- relevel(dds_EN$region, ref = "North")
+dds_EN <- DESeq(dds_EN)
 print("Obtaining results")
 res_East_South <- results(dds, name = "region_East_vs_South")
 res_North_South <- results(dds, name = "region_North_vs_South")
-res_East_North <- results(dds, contrast = c("region", "East", "North"))
+res_East_North <- results(dds_EN, name = "region_East_vs_North")
 print("Running DESeq: DONE")
 
 print("Calculating Shrinkage of effect size")
 resLFC_East_South  <- lfcShrink(dds, coef = "region_East_vs_South",  type = "apeglm")
 resLFC_North_South <- lfcShrink(dds, coef = "region_North_vs_South", type = "apeglm")
-resLFC_East_North <- lfcShrink(dds, contrast = c("region", "East", "North"), type = "apeglm")
+resLFC_East_North <- lfcShrink(dds_EN, coef = "region_East_vs_North", type = "apeglm")
 
 print("Saving Results")
 save(list=ls(all=TRUE), file="05_Region.RData")
