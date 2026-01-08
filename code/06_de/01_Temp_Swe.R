@@ -270,15 +270,7 @@ row_annotation <- data.frame(
     "Higher at 15"
   )
 )
-
 rownames(row_annotation) <- rownames(top_genes)
-
-ann_colors$row <- list(
-  temp_effect = c(
-    "Higher at 20" = "#b2182b",  # dark red
-    "Higher at 15" = "#2166ac"   # dark blue
-  )
-)
 
 # Expression matrix for the already-defined top_genes
 mat <- assay(vsd)[rownames(top_genes), ]
@@ -302,6 +294,13 @@ ann_colors <- list(
     "NA"  = "#b2df8a",
     NL  = "#33a02c",
     VF  = "#6a3d9a"
+  )
+)
+
+ann_colors$row <- list(
+  temp_effect = c(
+    "Higher at 20" = "#b2182b",  # dark red
+    "Higher at 15" = "#2166ac"   # dark blue
   )
 )
 
@@ -364,14 +363,3 @@ for (pop in unique(annotation_col$population)) {
     main = paste("Temperature response in population", pop)
   )
 }
-
-
-
-
-
-
-
-
-
-
-
