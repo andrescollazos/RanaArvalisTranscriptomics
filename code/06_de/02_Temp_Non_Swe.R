@@ -126,7 +126,7 @@ ggplot(res_df, aes(x = baseMean, y = log2FoldChange, color = diffexp_sig)) +
 # Volcano Plot
 
 EnhancedVolcano(
-  res,
+  resLFC,
   lab = NA,  # no labels by default
   x = 'log2FoldChange',
   y = 'padj',

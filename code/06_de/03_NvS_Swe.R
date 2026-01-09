@@ -75,6 +75,9 @@ print("Saving Results: DONE")
 print("-----------------------------------------------------------------")
 warnings()
 
+summary(res)
+summary(resLFC)
+
 # Convert to data frame
 res_df <- as.data.frame(resLFC)
 
@@ -119,14 +122,14 @@ ggplot(res_df, aes(x = baseMean, y = log2FoldChange, color = diffexp_sig)) +
     x = "Mean of normalized counts",
     y = "Log2 fold change (shrunken)"
   ) +
-  coord_cartesian(ylim = c(-6, 6)) +
+  coord_cartesian(ylim = c(-20, 20)) +
   theme_minimal()
 
 # ------------------------------------------------------------------------------
 # Volcano Plot
 
 EnhancedVolcano(
-  res,
+  resLFC,
   lab = NA,  # no labels by default
   x = 'log2FoldChange',
   y = 'padj',

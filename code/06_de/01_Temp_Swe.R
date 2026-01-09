@@ -128,12 +128,13 @@ ggplot(res_df, aes(x = baseMean, y = log2FoldChange, color = diffexp_sig)) +
 # Volcano Plot
 
 EnhancedVolcano(
-  res,
+  resLFC,
   lab = NA,  # no labels by default
   x = 'log2FoldChange',
   y = 'padj',
   
-  ylim = c(0, 20),
+  xlim = c(-5, 5),
+  ylim = c(0, 16),
   
   pCutoff = 0.05,
   FCcutoff = 1,
@@ -363,3 +364,98 @@ for (pop in unique(annotation_col$population)) {
     main = paste("Temperature response in population", pop)
   )
 }
+
+## ================================
+## Annotation
+## ================================
+
+
+annotation <- read.delim(
+  "/home/felipe/Documents/Studies/RanaArvalisTranscriptomics/results/07_annotation/RanaArvalis_Trinotate.annotation.tsv",
+  header = TRUE,
+  quote = "",
+  comment.char = "",
+  stringsAsFactors = FALSE
+)
+
+## ================================
+## 1. Extract top DE genes
+## ================================
+
+sig <- res_df[!is.na(res_df$padj) & res_df$padj < 0.05, ]
+
+top_up <- sig[sig$log2FoldChange > 0, ]
+top_up <- top_up[order(top_up$padj), ][1:10, ]
+
+top_down <- sig[sig$log2FoldChange < 0, ]
+top_down <- top_down[order(top_down$padj), ][1:10, ]
+
+top_de <- rbind(top_up, top_down)
+top_de$gene_id <- rownames(top_de)
+
+
+## ======================================
+## 2. Prepare annotation data for mapping
+## ======================================
+
+ann_sub <- annotation[annotation$gene_id %in% top_de$gene_id, ]
+
+
+## =====================================================
+## 3. Collapse transcript-level annotations to gene-level
+## =====================================================
+
+collapse_by_transcript <- function(transcript_id, x) {
+  keep <- !is.na(x) & x != "."
+  if (!any(keep)) return(NA)
+  paste(
+    paste0(transcript_id[keep], ": ", x[keep]),
+    collapse = "; "
+  )
+}
+
+library(dplyr)
+
+ann_gene <- ann_sub %>%
+  group_by(gene_id) %>%
+  summarise(
+    sprot_Top_BLASTX_hit = collapse_by_transcript(transcript_id, sprot_Top_BLASTX_hit),
+    sprot_Top_BLASTP_hit = collapse_by_transcript(transcript_id, sprot_Top_BLASTP_hit),
+    Pfam                 = collapse_by_transcript(transcript_id, Pfam),
+    infernal             = collapse_by_transcript(transcript_id, infernal),
+    SignalP              = collapse_by_transcript(transcript_id, SignalP),
+    TmHMM                = collapse_by_transcript(transcript_id, TmHMM),
+    eggnog               = collapse_by_transcript(transcript_id, eggnog),
+    Kegg                 = collapse_by_transcript(transcript_id, Kegg),
+    gene_ontology_BLASTX = collapse_by_transcript(transcript_id, gene_ontology_BLASTX),
+    gene_ontology_BLASTP = collapse_by_transcript(transcript_id, gene_ontology_BLASTP),
+    gene_ontology_Pfam   = collapse_by_transcript(transcript_id, gene_ontology_Pfam),
+    .groups = "drop"
+  )
+
+
+## ==========================================
+## 4. SPLIT ann_gene INTO TWO FILES (UP / DOWN)
+## ==========================================
+
+up_ids   <- rownames(top_up)
+down_ids <- rownames(top_down)
+
+
+write.table(
+  ann_gene[ann_gene$gene_id %in% up_ids, ],
+  file = "/home/felipe/Documents/Studies/RanaArvalisTranscriptomics/results/06_de/01_swe/Top50_UP_genes_annotated.tsv",
+  sep = "\t",
+  quote = FALSE,
+  row.names = FALSE
+)
+
+write.table(
+  ann_gene[ann_gene$gene_id %in% down_ids, ],
+  file = "/home/felipe/Documents/Studies/RanaArvalisTranscriptomics/results/06_de/01_swe/Top50_DOWN_genes_annotated.tsv",
+  sep = "\t",
+  quote = FALSE,
+  row.names = FALSE
+)
+
+
