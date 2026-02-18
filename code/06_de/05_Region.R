@@ -346,3 +346,313 @@ pheatmap(
   show_rownames = FALSE,
   fontsize_col = 8
 )
+
+# ------------------------------------------------------------------------------
+# Heatmap
+# EAST VS SOUTH
+
+# Select significant genes
+sig <- res_df_ES[!is.na(res_df_ES$padj) & res_df_ES$padj < 0.05, ]
+
+# Top 10 upregulated genes
+top_up <- sig[sig$log2FoldChange > 0, ]
+top_up <- top_up[order(top_up$padj), ][1:400, ]
+
+# Top 10 downregulated genes
+top_down <- sig[sig$log2FoldChange < 0, ]
+top_down <- top_down[order(top_down$padj), ][1:400, ]
+
+# Combine genes
+top_genes <- rbind(top_up, top_down)
+
+# Column annotations (temperature is the focus; region/population are annotations only)
+annotation_col <- as.data.frame(
+  colData(dds)[, c("temperature", "region", "population")]
+)
+
+row_annotation <- data.frame(
+  temp_effect = ifelse(
+    res_df_ES[rownames(top_genes), "log2FoldChange"] > 0,
+    "Higher at 20",
+    "Higher at 15"
+  )
+)
+rownames(row_annotation) <- rownames(top_genes)
+
+# Expression matrix for the already-defined top_genes
+mat <- assay(vsd)[rownames(top_genes), ]
+
+# Z-score per gene (pattern-focused for temperature)
+mat_scaled <- t(scale(t(mat)))
+
+# Annotation colors
+ann_colors <- list(
+  region = c(
+    East = "#33a02c",
+    South = "#e31a1c"
+  ),
+  temperature = c(
+    "15" = "#a6cee3",
+    "20" = "#fb9a99"
+  ),
+  population = c(
+    "Ka"    = "#FFDE52",
+    "Upp"   = "#FF7070",
+    "C_Fin" = "#FF33E4",
+    "E"     = "#B7FF5E",
+    "L"     = "#00CDFF"
+  )
+)
+
+ann_colors$row <- list(
+  temp_effect = c(
+    "Higher at 20" = "#b2182b",  # dark red
+    "Higher at 15" = "#2166ac"   # dark blue
+  )
+)
+
+keep <- annotation_col$region %in% c("East", "South")
+
+mat_scaled <- mat_scaled[, keep]
+annotation_col <- annotation_col[keep, ]
+
+# Heatmap: temperature-driven structure via correlation clustering
+pheatmap(
+  mat_scaled,
+  main="Region-driven transcriptional structure (East vs South)",
+  scale = "none",
+  cluster_rows = T,
+  cluster_cols = TRUE,
+  clustering_distance_rows = "correlation",
+  clustering_distance_cols = "correlation",
+  annotation_col = annotation_col,
+  annotation_row = row_annotation,
+  annotation_colors = ann_colors,
+  show_rownames = FALSE,
+  fontsize_col = 8
+)
+
+# ------------------------------------------------------------------------------
+# Heatmap NORTH VS SOUTH
+
+# Select significant genes
+sig <- res_df_NS[!is.na(res_df_NS$padj) & res_df_NS$padj < 0.05, ]
+
+# Top 10 upregulated genes
+top_up <- sig[sig$log2FoldChange > 0, ]
+top_up <- top_up[order(top_up$padj), ][1:400, ]
+
+# Top 10 downregulated genes
+top_down <- sig[sig$log2FoldChange < 0, ]
+top_down <- top_down[order(top_down$padj), ][1:400, ]
+
+# Combine genes
+top_genes <- rbind(top_up, top_down)
+
+# Column annotations (temperature is the focus; region/population are annotations only)
+annotation_col <- as.data.frame(
+  colData(dds)[, c("temperature", "region", "population")]
+)
+
+row_annotation <- data.frame(
+  temp_effect = ifelse(
+    res_df_NS[rownames(top_genes), "log2FoldChange"] > 0,
+    "Higher at 20",
+    "Higher at 15"
+  )
+)
+rownames(row_annotation) <- rownames(top_genes)
+
+# Expression matrix for the already-defined top_genes
+mat <- assay(vsd)[rownames(top_genes), ]
+
+# Z-score per gene (pattern-focused for temperature)
+mat_scaled <- t(scale(t(mat)))
+
+# Annotation colors
+ann_colors <- list(
+  region = c(
+    North = "#1f78b4",
+    South = "#e31a1c"
+  ),
+  temperature = c(
+    "15" = "#a6cee3",
+    "20" = "#fb9a99"
+  ),
+  population = c(
+    "NA"    = "#6f9fe2ff",
+    "NL"    = "#59FFC0",
+    "VF"    = "#6a3d9a",
+    "Ka"    = "#FFDE52",
+    "Upp"   = "#FF7070"
+  )
+)
+
+ann_colors$row <- list(
+  temp_effect = c(
+    "Higher at 20" = "#b2182b",  # dark red
+    "Higher at 15" = "#2166ac"   # dark blue
+  )
+)
+
+keep <- annotation_col$region %in% c("North", "South")
+
+mat_scaled <- mat_scaled[, keep]
+annotation_col <- annotation_col[keep, ]
+
+# Heatmap: temperature-driven structure via correlation clustering
+pheatmap(
+  mat_scaled,
+  main="Region-driven transcriptional structure (North vs South)",
+  scale = "none",
+  cluster_rows = T,
+  cluster_cols = TRUE,
+  clustering_distance_rows = "correlation",
+  clustering_distance_cols = "correlation",
+  annotation_col = annotation_col,
+  annotation_row = row_annotation,
+  annotation_colors = ann_colors,
+  show_rownames = FALSE,
+  fontsize_col = 8
+)
+
+# ------------------------------------------------------------------------------
+# Heatmap EAST VS NORTH
+
+# Select significant genes
+sig <- res_df_EN[!is.na(res_df_EN$padj) & res_df_EN$padj < 0.05, ]
+
+# Top 10 upregulated genes
+top_up <- sig[sig$log2FoldChange > 0, ]
+top_up <- top_up[order(top_up$padj), ][1:400, ]
+
+# Top 10 downregulated genes
+top_down <- sig[sig$log2FoldChange < 0, ]
+top_down <- top_down[order(top_down$padj), ][1:400, ]
+
+# Combine genes
+top_genes <- rbind(top_up, top_down)
+
+# Column annotations (temperature is the focus; region/population are annotations only)
+annotation_col <- as.data.frame(
+  colData(dds)[, c("temperature", "region", "population")]
+)
+
+row_annotation <- data.frame(
+  temp_effect = ifelse(
+    res_df_EN[rownames(top_genes), "log2FoldChange"] > 0,
+    "Higher at 20",
+    "Higher at 15"
+  )
+)
+rownames(row_annotation) <- rownames(top_genes)
+
+# Expression matrix for the already-defined top_genes
+mat <- assay(vsd)[rownames(top_genes), ]
+
+# Z-score per gene (pattern-focused for temperature)
+mat_scaled <- t(scale(t(mat)))
+
+# Annotation colors
+ann_colors <- list(
+  region = c(
+    East = "#33a02c",
+    North = "#1f78b4"
+  ),
+  temperature = c(
+    "15" = "#a6cee3",
+    "20" = "#fb9a99"
+  ),
+  population = c(
+    "NA"    = "#6f9fe2ff",
+    "NL"    = "#59FFC0",
+    "VF"    = "#6a3d9a",
+    "C_Fin" = "#FF33E4",
+    "E"     = "#B7FF5E",
+    "L"     = "#00CDFF"
+  )
+)
+
+ann_colors$row <- list(
+  temp_effect = c(
+    "Higher at 20" = "#b2182b",  # dark red
+    "Higher at 15" = "#2166ac"   # dark blue
+  )
+)
+
+keep <- annotation_col$region %in% c("East", "North")
+
+mat_scaled <- mat_scaled[, keep]
+annotation_col <- annotation_col[keep, ]
+
+# Heatmap: temperature-driven structure via correlation clustering
+pheatmap(
+  mat_scaled,
+  main="Region-driven transcriptional structure (East vs North)",
+  scale = "none",
+  cluster_rows = T,
+  cluster_cols = TRUE,
+  clustering_distance_rows = "correlation",
+  clustering_distance_cols = "correlation",
+  annotation_col = annotation_col,
+  annotation_row = row_annotation,
+  annotation_colors = ann_colors,
+  show_rownames = FALSE,
+  fontsize_col = 8
+)
+
+
+
+# ------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
+
+genes_ES <- rownames(res_df_ES)[
+  !is.na(res_df_ES$padj) &
+  res_df_ES$padj < 0.05 &
+  abs(res_df_ES$log2FoldChange) >= 1
+]
+
+genes_NS <- rownames(res_df_NS)[
+  !is.na(res_df_NS$padj) &
+  res_df_NS$padj < 0.05 &
+  abs(res_df_NS$log2FoldChange) >= 1
+]
+
+genes_EN <- rownames(res_df_EN)[
+  !is.na(res_df_EN$padj) &
+  res_df_EN$padj < 0.05 &
+  abs(res_df_EN$log2FoldChange) >= 1
+]
+
+length(genes_ES)
+length(genes_NS)
+length(genes_EN)
+
+length(intersect(genes_ES, genes_NS))
+length(intersect(genes_ES, genes_EN))
+length(intersect(genes_NS, genes_EN))
+
+length(Reduce(intersect, list(genes_ES, genes_NS, genes_EN)))
+
+
+library(VennDiagram)
+
+venn.plot <- venn.diagram(
+  x = list(
+    "East vs South" = genes_ES,
+    "North vs South" = genes_NS,
+    "East vs North" = genes_EN
+  ),
+  filename = NULL,
+  fill = c("#e31a1c", "#1f78b4", "#33a02c"),
+  alpha = 0.5,
+  cex = 1.2,
+  cat.cex = 1.2
+)
+
+grid.draw(venn.plot)
+
+

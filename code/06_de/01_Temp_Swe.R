@@ -459,3 +459,14 @@ write.table(
 )
 
 
+# exclude first two columns
+annotation_sub <- annotation[, -c(1,2)]
+
+annotation_summ <- data.frame(
+  column = colnames(annotation_sub),
+  n_elements = sapply(annotation_sub, function(x) sum(!is.na(x) & x != "" & x != ".")),
+  n_unique  = sapply(annotation_sub, function(x) length(unique(x[!is.na(x) & x != ""& x != "."])))
+)
+
+annotation_summ
+

@@ -73,6 +73,9 @@ print("Saving Results: DONE")
 print("-----------------------------------------------------------------")
 warnings()
 
+summary(res)
+summary(resLFC)
+
 # Convert to data frame
 res_df <- as.data.frame(resLFC)
 # ------------------------------------------------------------------------------
